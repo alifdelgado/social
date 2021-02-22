@@ -20,12 +20,13 @@ class UsersCanCreateStatusesTest extends DuskTestCase
         $user = User::factory()->create();
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
-                ->visit('/')
+                ->visit('/home')
                 ->type('body', 'Mi primer status')
                 ->press('#create-status')
                 ->screenshot('create-status')
                 ->waitForText('Mi primer status')
-                ->assertSee('Mi primer status');
+                ->assertSee('Mi primer status')
+                ->assertSee($user->name);
         });
     }
 }

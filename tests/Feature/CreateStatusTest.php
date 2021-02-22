@@ -27,7 +27,7 @@ class CreateStatusTest extends TestCase
         $body = 'Mi primer status';
         $response = $this->postJson(route('statuses.store'), ['body' => $body]);
         $response->assertJson([
-            'body'  =>  $body
+            'data' => ['body'  =>  $body]
         ]);
         $this->assertDatabaseHas('statuses', [
             'user_id'   =>  $user->id,

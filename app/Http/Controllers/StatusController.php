@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use Illuminate\Http\Request;
+use App\Http\Resources\StatusResource;
 
 class StatusController extends Controller
 {
     public function index()
     {
-        return Status::latest()->paginate();
+        return StatusResource::collection(Status::latest()->paginate());
     }
-    
+
     public function store()
     {
         request()->validate(['body' => 'required|min:5']);
@@ -19,6 +20,7 @@ class StatusController extends Controller
             'body'      =>  request('body'),
             'user_id'   =>  auth()->id()
         ]);
-        return response()->json(['body' => $status->body]);
+
+        return StatusResource::make($status);
     }
 }

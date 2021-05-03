@@ -2,19 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Like;
-use App\Models\User;
-use App\Models\Status;
+use App\Models\Friendship;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LikeFactory extends Factory
+class FriendshipFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Like::class;
+    protected $model = Friendship::class;
 
     /**
      * Define the model's default state.
@@ -24,7 +22,7 @@ class LikeFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' =>  User::factory()->create()
+            //
         ];
     }
 }

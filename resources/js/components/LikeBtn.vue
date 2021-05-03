@@ -1,34 +1,63 @@
 <template>
-    <button v-if="status.is_liked" @click="unlike(status)" class="btn btn-link" dusk="unlike-btn">
-        <i class="fas fa-thumbs-up"></i>
-        Te gusta
-    </button>
-    <button v-else @click="like(status)" class="btn btn-link" dusk="like-btn">
-        <i class="far fa-thumbs-up"></i>
-        Me gusta
+    <button @click="toggle()" :class="getBtnClasses">
+        <i :class="getIconClasses"></i>
+        {{ getText }}
     </button>
 </template>
 <script>
     export default {
         props: {
-            status: {
+            model: {
                 type: Object,
+                required: true
+            },
+            url: {
+                type: String,
                 required: true
             }
         },
         methods: {
-            like(status) {
-                axios.post(`/statuses/${status.id}/likes`).then(response => {
-                    status.is_liked = true;
-                    status.likes_count++;
+            toggle() {
+                let method = this.model.is_liked ? 'delete' : 'post';
+                axios[method](`/${this.url}/${this.model.id}/likes`).then(response => {
+                    this.model.is_liked = !this.model.is_liked;
+                    if(method==='delete') {
+                        this.model.likes_count--;
+                    } else {
+                        this.model.likes_count++;
+                    }
                 }).catch(error => console.log(error.response.data));
+            }
+        },
+        computed: {
+            getText() {
+                return this.model.is_liked ? 'Te gusta' : 'Me gusta';
             },
-            unlike(status) {
-                axios.delete(`/statuses/${status.id}/likes`).then(response => {
-                    status.is_liked = false;
-                    status.likes_count--;
-                }).catch(error => console.log(error.response.data));
+            getBtnClasses() {
+                return [
+                    this.model.is_liked ? 'font-weight-bold' : '',
+                    'btn', 'btn-light', 'text-primary'
+                ]
+            },
+            getIconClasses() {
+                return [
+                    this.model.is_liked ? 'fas' : 'far',
+                    'fa-thumbs-up'
+                ]
             }
         }
     }
 </script>
+<style lang="scss" scoped>
+    button {
+        font-size: 0.9em;
+        &:hover,
+        &:focus {
+            background: transparent;
+            border: 0px transparent;
+        }
+        i {
+            padding-left:0px;
+        }
+    }
+</style>

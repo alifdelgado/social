@@ -18,6 +18,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -40,4 +42,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['avatar'];
+
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+
+    public function link()
+    {
+        return route('users.show', $this);
+    }
+
+    public function avatar()
+    {
+        return 'https://i.picsum.photos/id/724/200/300.jpg?hmac=MwcEnqDDOgKg6U3WYPytBPH_jurNEK2_2kcknpgP6wg';
+    }
+
+    public function getAvatarAttribute()
+    {
+        return $this->avatar();
+    }
+
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
 }

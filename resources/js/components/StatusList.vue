@@ -9,16 +9,24 @@ import StatusListItem from './StatusListItem'
         components: {
             StatusListItem
         },
+        props: {
+            url: String
+        },
         data() {
             return {
                 statuses: []
             };
         },
         mounted() {
-            axios.get('/statuses').then(response => {
+            axios.get(this.getUrl).then(response => {
                 this.statuses = response.data.data;
             }).catch(error => console.log(error.response.data));
             EventBus.$on('status-created', status => this.statuses.unshift(status));
+        },
+        computed: {
+            getUrl() {
+                return this.url ? this.url : '/statuses';
+            }
         }
     }
 </script>
